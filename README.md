@@ -7,13 +7,11 @@
 
 
 ## 软件架构
-Blazor 
-.NET 7
-Masa Blazor
+`Blazor ` `.NET 7`  `Masa Blazor`
 
 ## 使用说明
 
-目前项目是Demo，并不是完整的一个产品，请无实际使用
+目前项目是Demo，并不是完整的一个产品，请勿实际使用，可作参考项目
 
 ## 参与贡献
 
@@ -21,3 +19,15 @@ Masa Blazor
 2.  新建 feature/xxx 分支
 3.  提交代码
 4.  新建 Pull Request
+
+## 引用
+
+[MASA Blazor - 企业级多端组件库 (masastack.com)](https://www.masastack.com/blazor)
+
+[Blazor](https://learn.microsoft.com/aspnet/core/blazor)
+
+## 联系我们
+
+qq：239573049
+
+wx：wx28u9123456789
