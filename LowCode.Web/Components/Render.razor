@@ -2,10 +2,19 @@
 @RenderFragment
 
 @code{
+    /// <summary>
+    /// 渲染组件
+    /// </summary>
     [Parameter]
     public RenderFragment RenderFragment { get; set; }
 
+    /// <summary>
+    /// 渲染配置
+    /// </summary>
     public GenerateMButtonOptions GenerateMButtonOptions { get; set; }
 
+    /// <summary>
+    /// 渲染动态代码
+    /// </summary>
     public string Code { get; set; }
 }
