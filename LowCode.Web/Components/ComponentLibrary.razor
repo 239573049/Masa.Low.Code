@@ -1,0 +1,31 @@
+﻿<div style="height: 100px">
+    <MButton class="button" OnClick="() => OnClick?.Invoke(ComponentType.MButton)">
+        <MIcon>
+            mdi-card
+        </MIcon>
+        按钮
+    </MButton>
+    <MButton class="button" OnClick="() => OnClick?.Invoke(ComponentType.MCart)">
+        <MIcon>mdi-id-card</MIcon>
+        卡片
+    </MButton>
+    <MButton class="button" OnClick="() => OnClick?.Invoke(ComponentType.MAvatar)">
+        <MIcon>mdi-id-card</MIcon>
+        头像
+    </MButton>
+</div>
+
+@code{
+
+    public delegate void OnClickDelegate(ComponentType type);
+
+    [Parameter]
+    public OnClickDelegate? OnClick { get; set; }
+
+}
+
+<style>
+    .button {
+        margin: 5px;
+    }
+</style>

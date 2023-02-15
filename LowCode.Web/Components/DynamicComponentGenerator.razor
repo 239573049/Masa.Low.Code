@@ -1,0 +1,61 @@
+﻿@using LowCode.Web.Components.Options
+
+@code {
+    public static (RenderFragment, string) GenerateMButton(GenerateMButtonOptions options)
+    {
+        RenderFragment template = @<MButton Block=options.block
+                                            Height=options.height
+                                            Width=options.width
+                                            Class=@options.Class
+                                            Style=@options.Style
+                                            Dark=options.dark
+                                            Attributes=options.attributes>@options.childContent</MButton>;
+
+        var data = $@"<MButton Block={options.block}
+                             Height={options.height}
+                             Width={options.width}
+                             Class={options.Class}
+                             Style={options.Style}
+                             Dark={options.dark}
+        Attributes={options.attributes}>{@options.childContent}</MButton>";
+
+        return (builder => { builder.AddContent(0, template); }, data);
+    }
+
+
+    public static (RenderFragment, string) GenerateMCard(GenerateMButtonOptions options)
+    {
+        RenderFragment template = @<MCard Height=options.height
+                                            Width=options.width
+                                            Class=@options.Class
+                                            Style=@options.Style
+                                            Dark=options.dark
+                                            Attributes=options.attributes>@options.childContent</MCard>;
+
+        var data = $@"<MCard Height={options.height}
+                             Width={options.width}
+                             Class={options.Class}
+                             Style={options.Style}
+                             Dark={options.dark}
+        Attributes={options.attributes}>{@options.childContent}</MCard>";
+
+        return (builder => { builder.AddContent(0, template); }, data);
+    }
+
+    public static (RenderFragment, string) GenerateMAvatar(GenerateMButtonOptions options)
+    {
+        RenderFragment template = @<MAvatar Height=options.height
+                                           Width=options.width
+                                           Class=@options.Class
+                                           Style=@options.Style
+                                           Attributes=options.attributes>@options.childContent</MAvatar>;
+
+        var data = $@"<MAvatar Height={options.height}
+                             Width={options.width}
+                             Class={options.Class}
+                             Style={options.Style}
+        Attributes={options.attributes}>{@options.childContent}</MAvatar>";
+
+        return (builder => { builder.AddContent(0, template); }, data);
+    }
+}

@@ -1,0 +1,11 @@
+﻿@using LowCode.Web.Components.Options
+@RenderFragment
+
+@code{
+    [Parameter]
+    public RenderFragment RenderFragment { get; set; }
+
+    public GenerateMButtonOptions GenerateMButtonOptions { get; set; }
+
+    public string Code { get; set; }
+}
