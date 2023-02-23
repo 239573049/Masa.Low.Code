@@ -1,0 +1,14 @@
+{
+  "TemplatesLanguage": [
+    {
+      "Title": "按钮",
+      "Icon": "mdi-card",
+      "Template": "<MButton Attributes=@Attributes>@ChildContent</MButton>\n        @code{\n            [Parameter(CaptureUnmatchedValues = true)]\n            public  IDictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();\n     \n    [Parameter]\n    public RenderFragment ChildContent { get; set; }       }"
+    },
+    {
+      "Title": "面板",
+      "Icon": "mdi-card",
+      "Template": "<MCard Attributes=@Attributes>@ChildContent</MCard>\n        @code{\n            [Parameter(CaptureUnmatchedValues = true)]\n            public  IDictionary<string, object> Attributes { get; set; } = new Dictionary<string, object>();\n  [Parameter]\n    public RenderFragment ChildContent { get; set; }            }"
+    }
+  ]
+}

@@ -8,6 +8,13 @@
 
     <ItemGroup>
       <PackageReference Include="Masa.Blazor" Version="1.0.0-preview.3" />
+      <PackageReference Include="Masa.Blazor.Extensions.Languages.Razor" Version="0.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="wwwroot\template\template.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

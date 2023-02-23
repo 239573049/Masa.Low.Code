@@ -1,5 +1,6 @@
 ﻿@page "/"
-@using LowCode.Web.Components.Options
+
+@using Masa.Blazor.Extensions.Languages.Razor
 
 <MRow NoGutters>
     <MCol>
@@ -11,8 +12,8 @@
             <ComponentLibrary OnClick="CreateOnClick"></ComponentLibrary>
 
         </MCard>
-        </MCol>
-        <MCol Order="2"
+    </MCol>
+    <MCol Order="2"
           Cols="12"
           Sm="6"
           Md="8">
@@ -20,7 +21,7 @@
                Outlined
                Style="height: 100vh"
                tile>
-            @foreach (var item in Renders)
+            @foreach (var item in Renders.Where(x => x.Value.Visible))
             {
                 <render @onclick="() => Id = item.Key">
                     @item.Value.RenderFragment
@@ -34,24 +35,18 @@
                Style="height:100vh"
                tile>
             <MCard>
-                @*TODO:通过反射实现获取组件参数根据参数类型显示指定组件动态修改参数*@
                 @foreach (var item in Renders)
                 {
-                    var options = item.Value.GenerateMButtonOptions;
                     if (item.Key == Id)
                     {
-                        <MTextField @bind-Value="options.width" Label="width"></MTextField>
-                        <MTextField @bind-Value="options.height" Label="height"></MTextField>
-                        <MTextField @bind-Value="options.Style" Label="Style"></MTextField>
-                        <MTextField @bind-Value="options.Class" Label="Class"></MTextField>
+                        <MTextField @bind-Value="item.Value.GenerateOptions.Width" Label="width"></MTextField>
+                        <MTextField @bind-Value="item.Value.GenerateOptions.Height" Label="height"></MTextField>
+                        <MTextField @bind-Value="item.Value.GenerateOptions.Style" Label="style"></MTextField>
+                        <MTextField @bind-Value="item.Value.GenerateOptions.Class" Label="class"></MTextField>
                         <MDivider></MDivider>
-                        <MButton OnClick="() => AddOptionsAttribute(options.attributes)" Block>新增扩展参数输入框</MButton>
-                        @foreach (var e in options.attributes)
-                        {
-                            <MTextarea NoResize Rows="1" Value="@e.Key" ValueChanged="(v) => { options.attributes.Remove(e.Key);options.attributes.Add(v,e.Value);}"></MTextarea>
-                            <MTextarea NoResize Rows="1" Value="@options.attributes[e.Key].ToString()" ValueChanged="(v)=>options.attributes[e.Key]= v"></MTextarea>
-                        }
-                        <MButton Block OnClick="()=>DeleteComponent(item.Key)">删除</MButton>
+                        <MButton OnClick="() => AddOptionsAttribute(item.Value.GenerateOptions.attributes)" Block>新增扩展参数输入框</MButton>
+                        <MDivider></MDivider>
+                        <MButton Block OnClick="() => DeleteComponent(item.Key)">删除</MButton>
                     }
                 }
             </MCard>
@@ -60,14 +55,13 @@
 </MRow>
 
 @code {
-    public string Id { get; set; }
-    private Dictionary<string, Render> Renders = new();
+    private string Id { get; set; }
 
-    private RenderFragment RenderFragment { get; set; }
+    private Dictionary<string, Render> Renders = new();
 
     private void AddOptionsAttribute(Dictionary<string, object> attribute)
     {
-        attribute.Add("new","");
+        attribute.Add("new", "");
     }
 
     private void DeleteComponent(string key)
@@ -75,54 +69,44 @@
         Renders.Remove(key);
     }
 
-    private void CreateOnClick(ComponentType type)
+    private void CreateOnClick(TemplatesLanguageModule module)
     {
-        GenerateMButtonOptions options = null;
-        string code;
-        switch (type)
+        if (!string.IsNullOrEmpty(Id) && Renders.TryGetValue(Id, out var valur))
         {
-            case ComponentType.MButton:
-                options = new()
-                {
-                    childContent = @<span>新建的按钮</span>,
-                    attributes = new Dictionary<string, object>(),
-                    width = "100px",
-                };
+            var ComponentType = RazorCompile.CompileToType(new CompileRazorOptions()
+            {
+                Code = module.Template,
+                ConcurrentBuild = true
+            });
+            var render = new Render();
 
-                (RenderFragment, code) = DynamicComponentGenerator.GenerateMButton(options);
+            render.GenerateOptions.attributes.Add("Width", render.GenerateOptions.Width);
+            render.GenerateOptions.attributes.Add("ChildContent", render.RenderFragment);
+            
+            render.RenderFragment = @<DynamicComponent Type="ComponentType" Parameters="render.GenerateOptions.attributes"></DynamicComponent>;
+            render.Visible = false;
 
-                Renders.Add(Guid.NewGuid().ToString("N"), new Render() { RenderFragment = RenderFragment, GenerateMButtonOptions = options, Code = code });
-
-                break;
-            case ComponentType.MCart:
-
-                options = new()
-                {
-                    childContent = @<MButton>多个按钮</MButton>,
-                    attributes = new Dictionary<string, object>(),
-                    width = "100px",
-                };
-
-                (RenderFragment, code) = DynamicComponentGenerator.GenerateMCard(options);
-
-                Renders.Add(Guid.NewGuid().ToString("N"), new Render() { RenderFragment = RenderFragment, GenerateMButtonOptions = options, Code = code });
-                break;
-            case ComponentType.MAvatar:
-                options = new()
-                {
-                    childContent = @<MImage Src="https://cdn.masastack.com/stack/images/website/masa-blazor/jack.png" Alt="Jack"></MImage>,
-                    attributes = new Dictionary<string, object>(),
-                    width = "100px",
-                };
-
-                (RenderFragment, code) = DynamicComponentGenerator.GenerateMAvatar(options);
-
-                Renders.Add(Guid.NewGuid().ToString("N"), new Render() { RenderFragment = RenderFragment, GenerateMButtonOptions = options, Code = code });
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            valur.RenderFragment = render.RenderFragment;
+            Renders.Add(Guid.NewGuid().ToString("N"), render);
         }
+        else
+        {
+            var ComponentType = RazorCompile.CompileToType(new CompileRazorOptions()
+            {
+                Code = module.Template,
+                ConcurrentBuild = true
+            });
+            var render = new Render();
 
+            render.GenerateOptions.attributes.Add("Width", render.GenerateOptions.Width);
+
+            render.GenerateOptions.attributes.Add("ChildContent", render.RenderFragment);
+            render.RenderFragment = @<DynamicComponent Type="ComponentType" Parameters="render.GenerateOptions.attributes"></DynamicComponent>;
+            render.Visible = true;
+
+            Renders.Add(Guid.NewGuid().ToString("N"), render);
+        }
         StateHasChanged();
     }
+
 }

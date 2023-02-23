@@ -11,8 +11,10 @@
     /// <summary>
     /// 渲染配置
     /// </summary>
-    public GenerateMButtonOptions GenerateMButtonOptions { get; set; }
+    public GenerateOptions GenerateOptions { get; set; } = new();
 
+    public bool Visible { get; set; }
+    
     /// <summary>
     /// 渲染动态代码
     /// </summary>

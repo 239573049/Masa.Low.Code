@@ -1,7 +1,11 @@
+using LowCode.Web.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMasaBlazor();
+builder.Services.AddTemplates()
+    .AddRazorCompile();
 
 var app = builder.Build();
 
